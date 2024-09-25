@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstdint>
-#include <unordered_set>
 #include <string>
 #include "murmurHash.h"
 using namespace std;
@@ -10,6 +9,10 @@ struct Node {
     K key;
     V value;
     bool isEmpty = true;
+    Node(){
+        key = K();
+        value = V();
+    }
 };
 
 template<typename K, typename V>
@@ -19,7 +22,7 @@ struct HashTable {
     Node<K, V>* hashTable;
 
     HashTable() {
-        cap = 4;
+        cap = 16;
         size = 0;
         hashTable = new Node<K, V>[cap];
     }
@@ -87,7 +90,7 @@ struct HashTable {
                 hashTable[(ind + val) % cap].value = V();
                 hashTable[(ind + val) % cap].isEmpty = true;
                 size--;
-                if (size < (cap / 4)) {
+                if (size < (cap / 4) && (cap / 2 > 16 )) {
                     int tempcap = cap;
                     cap /= 2;
                     resizeTable(tempcap);
@@ -99,18 +102,18 @@ struct HashTable {
         return false;
     }
 
-    bool get(const K& key) {
+    V get(const K& key) {
         uint32_t ind = getHash(key);
 
         int val = 0;
         while (val < cap) {
             if (hashTable[(ind + val) % cap].key == key) {
-                cout << "Found key: " << key << endl;
-                return true;
+                return hashTable[(ind + val) % cap].value;
             }
             val++;
         }
-        return false;
+        cout << "Could not found key" << endl;
+        return V();
     }
 
     void resizeTable(int oldCap) {

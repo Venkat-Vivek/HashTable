@@ -12,6 +12,8 @@ int main() {
     cout << h.update("programmer", "thinking") << endl;
     cout << h.remove("ss") << endl;
     cout << h.remove(s) << endl;
+    cout << h.get(ss) <<endl;
+    cout << h.get(s) << endl;
     h.printHashTable();
 
     HashTable<int, string> intHash;
