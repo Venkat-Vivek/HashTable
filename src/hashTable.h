@@ -8,10 +8,13 @@ template<typename K, typename V>
 struct Node {
     K key;
     V value;
-    bool isEmpty = true;
+    bool isEmpty;
+    uint32_t hash;
     Node(){
         key = K();
         value = V();
+        isEmpty = true;
+        hash = 0;
     }
 };
 
@@ -41,13 +44,13 @@ struct HashTable {
             keyPtr = reinterpret_cast<const char*>(&key);
             len = sizeof(K);
         }
-        uint32_t ind = murmurHash(keyPtr, len, 19) % cap;
-        return ind;
+        uint32_t hashedValue = murmurHash(keyPtr, len, 19);
+        return hashedValue;
     }
 
     void insert(const K& key, const V& value) {
-        uint32_t ind = getHash(key);
-
+        uint32_t hashedValue = getHash(key);
+        uint32_t ind = hashedValue % cap;
         int val = 0;
 
         while (val < cap && !hashTable[(ind + val) % cap].isEmpty) {
@@ -57,6 +60,7 @@ struct HashTable {
         hashTable[(ind + val) % cap].key = key;
         hashTable[(ind + val) % cap].value = value;
         hashTable[(ind + val) % cap].isEmpty = false;
+        hashTable[(ind + val) % cap].hash = hashedValue;
         size++;
 
         if (size >= (int)(0.7 * cap)) {
@@ -67,11 +71,12 @@ struct HashTable {
     }
 
     bool update(const K& key, const V& value) {
-        uint32_t ind = getHash(key);
+        uint32_t hashedValue = getHash(key);
+        uint32_t ind = hashedValue % cap;
 
         int val = 0;
         while (val < cap) {
-            if (hashTable[(ind + val) % cap].key == key) {
+            if (hashTable[(ind + val) % cap].hash == hashedValue) {
                 hashTable[(ind + val) % cap].value = value;
                 return true;
             }
@@ -81,16 +86,18 @@ struct HashTable {
     }
 
     bool remove(const K& key) {
-        uint32_t ind = getHash(key);
+        uint32_t hashedValue = getHash(key);
+        uint32_t ind = hashedValue % cap;
 
         int val = 0;
         while (val < cap) {
-            if (hashTable[(ind + val) % cap].key == key) {
+            if (hashTable[(ind + val) % cap].hash == hashedValue) {
                 hashTable[(ind + val) % cap].key = K();
                 hashTable[(ind + val) % cap].value = V();
                 hashTable[(ind + val) % cap].isEmpty = true;
+                hashTable[(ind + val) % cap].hash = 0;
                 size--;
-                if (size < (cap / 4) && (cap / 2 > 16 )) {
+                if (size < (cap / 4) && (cap / 2 >= 16 )) {
                     int tempcap = cap;
                     cap /= 2;
                     resizeTable(tempcap);
@@ -103,11 +110,12 @@ struct HashTable {
     }
 
     V get(const K& key) {
-        uint32_t ind = getHash(key);
+        uint32_t hashedValue = getHash(key);
+        uint32_t ind = hashedValue % cap;
 
         int val = 0;
         while (val < cap) {
-            if (hashTable[(ind + val) % cap].key == key) {
+            if (hashTable[(ind + val) % cap].hash == hashedValue) {
                 return hashTable[(ind + val) % cap].value;
             }
             val++;
