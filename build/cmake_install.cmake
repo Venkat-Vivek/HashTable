@@ -1,4 +1,4 @@
-# Install script for directory: /home/venkat-pt7718/HashTable
+# Install script for directory: /home/venkat-pt7718/sample/HashTable
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/venkat-pt7718/HashTable/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/venkat-pt7718/sample/HashTable/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

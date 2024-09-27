@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/venkat-pt7718/HashTable/src
+CXX_INCLUDES = -I/home/venkat-pt7718/sample/HashTable/src
 
 CXX_FLAGS = -std=gnu++17
 

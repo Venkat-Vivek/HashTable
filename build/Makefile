@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/venkat-pt7718/HashTable
+CMAKE_SOURCE_DIR = /home/venkat-pt7718/sample/HashTable
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/venkat-pt7718/HashTable/build
+CMAKE_BINARY_DIR = /home/venkat-pt7718/sample/HashTable/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/venkat-pt7718/HashTable/build/CMakeFiles /home/venkat-pt7718/HashTable/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/venkat-pt7718/sample/HashTable/build/CMakeFiles /home/venkat-pt7718/sample/HashTable/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/venkat-pt7718/HashTable/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/venkat-pt7718/sample/HashTable/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
