@@ -17,7 +17,7 @@ struct Node {
         hash = 0;
     }
 };
-
+//hash table
 template<typename K, typename V>
 struct HashTable {
     int cap;
