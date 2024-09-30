@@ -4,31 +4,35 @@
 #include "murmurHash.h"
 using namespace std;
 
-template<typename K, typename V>
+
+template <typename K, typename V>
 struct Node {
     K key;
     V value;
-    bool isEmpty;
     bool isDeleted;
-    uint32_t hash;
-    Node(){
-        key = K();
-        value = V();
-        isDeleted = false;
-        isEmpty = true;
-        hash = 0;
-    }
+    bool isEmpty;
+    size_t hash;
+
+    // Default constructor
+    Node() 
+        : key(K()), value(V()), isDeleted(false), isEmpty(true), hash(0) {}
+    
+    // Parameterized constructor
+    Node(const K& k, const V& v, bool deleted = false, bool empty = true, uint32_t h = 0)
+        : key(k), value(v), isDeleted(deleted), isEmpty(empty), hash(h) {}
 };
 
 template<typename K, typename V>
 struct HashTable {
     int cap;
     int size;
+    int deletedCount;
     Node<K, V>* hashTable;
 
     HashTable() {
         cap = 16;
         size = 0;
+        deletedCount = 0;
         hashTable = new Node<K, V>[cap];
     }
 
@@ -53,93 +57,78 @@ struct HashTable {
     void insert(const K& key, const V& value) {
         uint32_t hashedValue = getHash(key);
         uint32_t ind = hashedValue % cap;
-        int val = 0;
-        bool flag = false;
-        while (val < cap && (!hashTable[(ind + val) % cap].isEmpty || hashTable[(ind + val) % cap].isDeleted)) {
-            if(hashTable[(ind + val) % cap].hash == hashedValue && hashTable[(ind + val) % cap].key == key){
-                flag = true;
-                break;
+
+        while ((!hashTable[ind % cap].isEmpty || hashTable[ind % cap].isDeleted)) {
+            if(hashTable[ind % cap].hash == hashedValue && hashTable[ind % cap].key == key){
+                return;
             }
-            val++;
+            ind++;
         }
-        if(flag){
-            cout << "Duplicate key" << endl;
-            return;
-        }
-        else{
-            hashTable[(ind + val) % cap].key = key;
-            hashTable[(ind + val) % cap].value = value;
-            hashTable[(ind + val) % cap].isEmpty = false;
-            hashTable[(ind + val) % cap].hash = hashedValue;
-            size++;
-        }
+
+        hashTable[ind % cap] = {key, value , false, false, hashedValue};
+        size++;
    
         if (size >= (int)(0.7 * cap)) {
-            int tempcap = cap;
-            cap *= 2;
-            resizeTable(tempcap);
+            resizeTable(cap, cap*2);
         }
+    }
+
+    int bucketIndex(const K& key){
+        uint32_t hashedValue = getHash(key);
+        uint32_t ind = hashedValue % cap;
+        while(!hashTable[ind].isEmpty || hashTable[ind].isDeleted){
+            if (hashTable[ind].hash == hashedValue && hashTable[ind].key == key) {
+                return ind;
+            }
+            ind++;
+            ind = ind % cap;
+        }
+        return -1;
     }
 
     bool update(const K& key, const V& value) {
-        uint32_t hashedValue = getHash(key);
-        uint32_t ind = hashedValue % cap;
-
-        int val = 0;
-        while (val < cap) {
-            if (hashTable[(ind + val) % cap].hash == hashedValue && hashTable[(ind + val) % cap].key == key) {
-                hashTable[(ind + val) % cap].value = value;
-                return true;
-            }
-            val++;
+        int ind = bucketIndex(key);
+        if(ind != -1){
+            hashTable[ind].value = value;
+            return true;
         }
-        return false;
+        else{
+            return false;
+        }
     }
 
     bool remove(const K& key) {
-        uint32_t hashedValue = getHash(key);
-        uint32_t ind = hashedValue % cap;
-        int val = 0;
-        while (val < cap) {
-            if (hashTable[(ind + val) % cap].hash == hashedValue && hashTable[(ind + val) % cap].key == key) {
-                hashTable[(ind + val) % cap].key = K();
-                hashTable[(ind + val) % cap].value = V();
-                hashTable[(ind + val) % cap].isEmpty = true;
-                hashTable[(ind + val) % cap].isDeleted = true;
-                hashTable[(ind + val) % cap].hash = 0;
-                
-                // if (size < (cap / 4) && (cap / 2 >= 16 )) {
-                //     int tempcap = cap;
-                //     cap /= 2;
-                //     resizeTable(tempcap);
-                // }
-                return true;
+        int ind = bucketIndex(key);
+        if(ind != -1){
+            hashTable[ind] = {K(), V(), true, true, 0};
+            deletedCount++;
+            if ((size - deletedCount) < (cap / 4) && (cap / 2 >= 16 )) {
+                resizeTable(cap, cap / 2);
             }
-            val++;
+            return true;
         }
-        return false;
+        else{
+            return false;
+        }
     }
 
     V get(const K& key) {
-        uint32_t hashedValue = getHash(key);
-        uint32_t ind = hashedValue % cap;
-
-        int val = 0;
-        while (val < cap) {
-            if (hashTable[(ind + val) % cap].hash == hashedValue && hashTable[(ind + val) % cap].key == key) {
-                return hashTable[(ind + val) % cap].value;
-            }
-            val++;
+        int ind = bucketIndex(key);
+        if(ind != -1){
+            return hashTable[ind].value;
         }
-        cout << "Could not found key" << endl;
-        return V();
+        else{
+            cout << "Could not found key" << endl;
+            return V();
+        }
     }
 
-    void resizeTable(int oldCap) {
+    void resizeTable(int oldCap, int newCap) {
         Node<K, V>* oldTable = hashTable;
         size = 0;
+        cap = newCap;
         hashTable = new Node<K, V>[cap];
-
+        deletedCount = 0;
         for (int i = 0; i < oldCap; i++) {
             if (!oldTable[i].isEmpty && !oldTable[i].isDeleted) {
                 insert(oldTable[i].key, oldTable[i].value);
