@@ -13,13 +13,13 @@ struct Node {
     bool isEmpty;
     size_t hash;
 
-    // Default constructor
-    Node() 
-        : key(K()), value(V()), isDeleted(false), isEmpty(true), hash(0) {}
-    
-    // Parameterized constructor
-    Node(const K& k, const V& v, bool deleted = false, bool empty = true, uint32_t h = 0)
-        : key(k), value(v), isDeleted(deleted), isEmpty(empty), hash(h) {}
+    Node(const K& Key = K(), const V& Value= V(), bool deleted = false, bool empty = true, uint32_t h = 0){
+        key = Key;
+        value = Value;
+        isDeleted = deleted;
+        isEmpty = empty;
+        hash = h;
+    }
 };
 
 template<typename K, typename V>
