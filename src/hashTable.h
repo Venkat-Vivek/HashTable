@@ -11,7 +11,7 @@ struct Node {
     V value;
     bool isDeleted;
     bool isEmpty;
-    size_t hash;
+    uint32_t hash;
 
     Node(const K& Key = K(), const V& Value= V(), bool deleted = false, bool empty = true, uint32_t h = 0){
         key = Key;
@@ -54,7 +54,7 @@ struct HashTable {
         return hashedValue;
     }
 
-    void insert(const K& key, const V& value) {
+    void insert(K key, V value) {
         uint32_t hashedValue = getHash(key);
         uint32_t ind = hashedValue % cap;
 
@@ -65,7 +65,7 @@ struct HashTable {
             ind++;
         }
 
-        hashTable[ind % cap] = {key, value , false, false, hashedValue};
+        hashTable[ind % cap] = {std::move(key), std::move(value) , false, false, hashedValue};
         size++;
    
         if (size >= (int)(0.7 * cap)) {
@@ -86,10 +86,10 @@ struct HashTable {
         return -1;
     }
 
-    bool update(const K& key, const V& value) {
+    bool update(const K& key, V value) {
         int ind = bucketIndex(key);
         if(ind != -1){
-            hashTable[ind].value = value;
+            hashTable[ind].value = std::move(value);
             return true;
         }
         else{
