@@ -2,53 +2,58 @@
 #include <chrono>
 #include <string>
 #include "hashTable.h" 
+#include <thread>
 
 using namespace std;
 using namespace std::chrono;
 
 void benchmarkHashTable(int numElements) {
     HashTable<int, int> hashTable;
+    try{
+        auto startInsert = high_resolution_clock::now();
+        for (int i = 1; i <= numElements; ++i) {
+            hashTable.insert(i,i+1);
+        }
+        auto endInsert = high_resolution_clock::now();
+        auto durationInsert = duration_cast<microseconds>(endInsert - startInsert);
 
-    auto startInsert = high_resolution_clock::now();
-    for (int i = 1; i <= numElements; ++i) {
-        hashTable.insert(i,i+1);
+        auto startRetrieve = high_resolution_clock::now();
+        for (int i = 1; i <= numElements; ++i) {
+            int ans = hashTable.get(i);
+        }
+        cout << endl;
+        auto endRetrieve = high_resolution_clock::now();
+        auto durationRetrieve = duration_cast<microseconds>(endRetrieve - startRetrieve);
+
+        auto startUpdate = high_resolution_clock::now();
+        for (int i = 1; i <= numElements; ++i) {
+            bool flag = hashTable.update(i,i+numElements);
+        }
+        cout << endl;
+        auto endUpdate = high_resolution_clock::now();
+        auto durationUpdate = duration_cast<microseconds>(endUpdate - startUpdate);
+
+        auto startDelete = high_resolution_clock::now();
+        for (int i = numElements; i >= 0; --i) {
+            bool flag = hashTable.remove(i);
+        }
+        cout << endl;
+        auto endDelete = high_resolution_clock::now();
+        auto durationDelete = duration_cast<microseconds>(endDelete - startDelete);
+
+        cout << "Insertion Time for " << numElements << " elements: " 
+            << durationInsert.count() * 0.001 << " ms" << endl;
+        cout << "Retrieval Time for " << numElements << " elements: " 
+            << durationRetrieve.count() * 0.001 << " ms" << endl;
+        cout << "Update Time for " << numElements << " elements: " 
+            << durationUpdate.count() * 0.001 << " ms" << endl;
+        cout << "Deletion Time for " << numElements << " elements: " 
+            << durationDelete.count() * 0.001 << " ms" << endl;
+        hashTable.printHashTable();
     }
-    auto endInsert = high_resolution_clock::now();
-    auto durationInsert = duration_cast<microseconds>(endInsert - startInsert);
-
-    auto startRetrieve = high_resolution_clock::now();
-    for (int i = 1; i <= numElements; ++i) {
-        int ans = hashTable.get(i);
+     catch (const exception& e) {
+        cout << "Exception " << e.what() << endl;
     }
-    cout << endl;
-    auto endRetrieve = high_resolution_clock::now();
-    auto durationRetrieve = duration_cast<microseconds>(endRetrieve - startRetrieve);
-
-    auto startUpdate = high_resolution_clock::now();
-    for (int i = 1; i <= numElements; ++i) {
-        bool flag = hashTable.update(i,i+numElements);
-    }
-    cout << endl;
-    auto endUpdate = high_resolution_clock::now();
-    auto durationUpdate = duration_cast<microseconds>(endUpdate - startUpdate);
-
-    auto startDelete = high_resolution_clock::now();
-    for (int i = numElements; i >= 0; --i) {
-        bool flag = hashTable.remove(i);
-    }
-    cout << endl;
-    auto endDelete = high_resolution_clock::now();
-    auto durationDelete = duration_cast<microseconds>(endDelete - startDelete);
-
-    cout << "Insertion Time for " << numElements << " elements: " 
-         << durationInsert.count() * 0.001 << " ms" << endl;
-    cout << "Retrieval Time for " << numElements << " elements: " 
-         << durationRetrieve.count() * 0.001 << " ms" << endl;
-    cout << "Update Time for " << numElements << " elements: " 
-        << durationUpdate.count() * 0.001 << " ms" << endl;
-    cout << "Deletion Time for " << numElements << " elements: " 
-         << durationDelete.count() * 0.001 << " ms" << endl;
-    hashTable.printHashTable();
 }
 
 void test1(){
@@ -206,6 +211,31 @@ void test5(){
     cout << endl;
 }
 
+void call(HashTable<int, int>& hTable){
+    for(int i = 0; i < 1000; i++){
+        hTable.add(5, 10);
+        hTable.add1(15, 10);
+    }
+}
+
+void test6(){
+    cout << "Test 6" << endl;
+    cout << "---------- " << endl;
+    HashTable<int, int> hTable;
+    hTable.insert(5,0);
+    hTable.insert(15,0);
+
+    thread t[100];
+    for(int i = 0; i < 100; i++){
+        t[i] = thread(call, std::ref(hTable));
+    }
+    for (int i = 0; i < 100; i++){
+        t[i].join();
+    }
+    cout << "With lock: " << hTable.get(5) << endl;
+    cout << "Without using locks: " << hTable.get(15) << endl;
+}
+
 int main() {
     //empty hash table & accessing updating deleting default values
     test1();
@@ -217,7 +247,9 @@ int main() {
     test4();
     //inserting duplicate keys into hash table & accessing updating deleting them
     test5();
-    int numElements = 1000; 
+    //multithreading
+    test6();
+    int numElements = 10000; 
     benchmarkHashTable(numElements);
     return 0;
 }
