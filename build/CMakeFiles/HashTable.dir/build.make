@@ -69,19 +69,19 @@ include CMakeFiles/HashTable.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/HashTable.dir/flags.make
 
-CMakeFiles/HashTable.dir/src/main.cpp.o: CMakeFiles/HashTable.dir/flags.make
-CMakeFiles/HashTable.dir/src/main.cpp.o: /home/venkat-pt7718/sample/HashTable/src/main.cpp
-CMakeFiles/HashTable.dir/src/main.cpp.o: CMakeFiles/HashTable.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/venkat-pt7718/sample/HashTable/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/HashTable.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/HashTable.dir/src/main.cpp.o -MF CMakeFiles/HashTable.dir/src/main.cpp.o.d -o CMakeFiles/HashTable.dir/src/main.cpp.o -c /home/venkat-pt7718/sample/HashTable/src/main.cpp
+CMakeFiles/HashTable.dir/src/benchmark.cpp.o: CMakeFiles/HashTable.dir/flags.make
+CMakeFiles/HashTable.dir/src/benchmark.cpp.o: /home/venkat-pt7718/sample/HashTable/src/benchmark.cpp
+CMakeFiles/HashTable.dir/src/benchmark.cpp.o: CMakeFiles/HashTable.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/venkat-pt7718/sample/HashTable/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/HashTable.dir/src/benchmark.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/HashTable.dir/src/benchmark.cpp.o -MF CMakeFiles/HashTable.dir/src/benchmark.cpp.o.d -o CMakeFiles/HashTable.dir/src/benchmark.cpp.o -c /home/venkat-pt7718/sample/HashTable/src/benchmark.cpp
 
-CMakeFiles/HashTable.dir/src/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/HashTable.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/venkat-pt7718/sample/HashTable/src/main.cpp > CMakeFiles/HashTable.dir/src/main.cpp.i
+CMakeFiles/HashTable.dir/src/benchmark.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/HashTable.dir/src/benchmark.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/venkat-pt7718/sample/HashTable/src/benchmark.cpp > CMakeFiles/HashTable.dir/src/benchmark.cpp.i
 
-CMakeFiles/HashTable.dir/src/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/HashTable.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/venkat-pt7718/sample/HashTable/src/main.cpp -o CMakeFiles/HashTable.dir/src/main.cpp.s
+CMakeFiles/HashTable.dir/src/benchmark.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/HashTable.dir/src/benchmark.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/venkat-pt7718/sample/HashTable/src/benchmark.cpp -o CMakeFiles/HashTable.dir/src/benchmark.cpp.s
 
 CMakeFiles/HashTable.dir/src/murmurHash.cpp.o: CMakeFiles/HashTable.dir/flags.make
 CMakeFiles/HashTable.dir/src/murmurHash.cpp.o: /home/venkat-pt7718/sample/HashTable/src/murmurHash.cpp
@@ -99,15 +99,16 @@ CMakeFiles/HashTable.dir/src/murmurHash.cpp.s: cmake_force
 
 # Object files for target HashTable
 HashTable_OBJECTS = \
-"CMakeFiles/HashTable.dir/src/main.cpp.o" \
+"CMakeFiles/HashTable.dir/src/benchmark.cpp.o" \
 "CMakeFiles/HashTable.dir/src/murmurHash.cpp.o"
 
 # External object files for target HashTable
 HashTable_EXTERNAL_OBJECTS =
 
-HashTable: CMakeFiles/HashTable.dir/src/main.cpp.o
+HashTable: CMakeFiles/HashTable.dir/src/benchmark.cpp.o
 HashTable: CMakeFiles/HashTable.dir/src/murmurHash.cpp.o
 HashTable: CMakeFiles/HashTable.dir/build.make
+HashTable: benchmark/src/libbenchmark.a
 HashTable: CMakeFiles/HashTable.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/venkat-pt7718/sample/HashTable/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable HashTable"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/HashTable.dir/link.txt --verbose=$(VERBOSE)

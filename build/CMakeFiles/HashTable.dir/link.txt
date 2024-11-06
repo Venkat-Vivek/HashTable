@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/HashTable.dir/src/main.cpp.o CMakeFiles/HashTable.dir/src/murmurHash.cpp.o -o HashTable 
+/usr/bin/c++ CMakeFiles/HashTable.dir/src/benchmark.cpp.o CMakeFiles/HashTable.dir/src/murmurHash.cpp.o -o HashTable  benchmark/src/libbenchmark.a -lpthread -lrt 

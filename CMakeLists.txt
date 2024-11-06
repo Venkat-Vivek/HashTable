@@ -1,13 +1,18 @@
 cmake_minimum_required(VERSION 3.10)
-
 project(HashTable)
 
+# Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(HashTable
-    src/main.cpp         
-    src/murmurHash.cpp    
-)
+# Find the benchmark library
+find_package(benchmark REQUIRED)
 
-target_include_directories(HashTable PUBLIC "${PROJECT_SOURCE_DIR}/src")
+# Set the sources with the correct path
+set(SOURCES ../src/benchmark.cpp ../src/murmurHash.cpp)
+
+# Define the executable
+add_executable(HashTable ${SOURCES})
+
+# Link the executable with benchmark and pthread libraries
+target_link_libraries(HashTable benchmark::benchmark pthread)
