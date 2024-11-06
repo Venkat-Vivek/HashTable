@@ -25,9 +25,9 @@ void benchmarkHashTable() {
             bool flag = hashTable.update(i,i+numElements);
         }
 
-        // for (int i = 1; i <= numElements; ++i) {
-        //     bool flag = hashTable.remove(i);
-        // }
+        for (int i = 1; i <= numElements; ++i) {
+            bool flag = hashTable.remove(i);
+        }
        
     }
      catch (const exception& e) {
