@@ -4,11 +4,17 @@
 #include <string>
 #include "hashTable.h" 
 #include <thread>
+#include <functional>
+#include <unordered_map>
+#include <shared_mutex>
 
 using namespace std;
 using namespace std::chrono;
 
 HashTable<int, int> hashTable;
+HashTable<int, int> hashTable2;
+unordered_map<int, int> mp;
+std::shared_mutex sh;
 
 void benchmarkHashTable() {
     try{
@@ -34,27 +40,163 @@ void benchmarkHashTable() {
         cout << "Exception " << e.what() << endl;
     }
 }
-void test(){    
-    thread t[100];
-    for(int i = 0; i < 100; i++){
-        t[i] = thread(benchmarkHashTable);
-    }
-    for (int i = 0; i <100; i++){
-        t[i].join();
+
+int numElements=1000000;
+
+void benchmarkInsertion(){
+    for (int i = 1; i <= numElements; ++i) {
+        hashTable2.insert(i, i + 1);
     }
 }
 
+void benchmarkLookup(){
+    for (int i = 1; i <= numElements; ++i) {
+        hashTable2.get(i);
+    }
+}
 
+void benchmarkUpdation(){
+    for (int i = 1; i <= numElements; ++i) {
+        hashTable2.update(i, i + numElements);
+    }
+}
+
+void benchmarkRemoval(){
+    for (int i = 1; i <= numElements; ++i) {
+        hashTable2.remove(i);
+    }
+}
+
+void benchmarkInsertion2(){
+    for (int i = 1; i <= numElements; ++i) {
+        {
+            std::unique_lock<std::shared_mutex> lock(sh);
+            mp.insert({i, i + 1});
+        }
+    }
+}
+
+void benchmarkLookup2(){
+    for (int i = 1; i <= numElements; ++i) {
+        {
+            std::shared_lock<std::shared_mutex> lock(sh);
+            mp[i] = i + numElements;
+        }
+    }
+}
+
+void benchmarkUpdation2(){
+    for (int i = 1; i <= numElements; ++i) {
+        {
+            std::unique_lock<std::shared_mutex> lock(sh);
+            mp[i] = i + numElements;
+        }
+    }
+}
+
+void benchmarkRemoval2(){
+    for (int i = 1; i <= numElements; ++i) {
+        {
+            std::unique_lock<std::shared_mutex> lock(sh);
+            mp.erase(i);
+        }
+    }
+}
+
+void test(int count, const std::function<void()>& benchmarkMethod){    
+    thread t[count];
+    for(int i = 0; i < count; i++){
+        t[i] = thread(benchmarkMethod);
+    }
+    for (int i = 0; i < count; i++){
+        t[i].join();
+    }
+}
 
 static void BENCHMARK_HASHTABLE(benchmark::State& state)
 {
     for (auto _ : state)
     {
-        test();
+        test(16, benchmarkHashTable);
     }
 }
 
-BENCHMARK(BENCHMARK_HASHTABLE);
+static void INSERTION(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        test(16, benchmarkInsertion);
+    }
+}
+
+static void LOOKUP(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        test(16, benchmarkLookup);
+    }
+}
+
+static void UPDATION(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        test(16,benchmarkUpdation);
+    }
+}
+
+static void DELETION(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        test(16,benchmarkRemoval);
+    }
+}
+
+static void INSERTION2(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        test(16, benchmarkInsertion2);
+    }
+}
+
+static void LOOKUP2(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        test(16, benchmarkLookup2);
+    }
+}
+
+static void UPDATION2(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        test(16,benchmarkUpdation2);
+    }
+}
+
+static void DELETION2(benchmark::State& state)
+{
+    for (auto _ : state)
+    {
+        test(16,benchmarkRemoval2);
+    }
+}
+
+//custom hash table
+BENCHMARK(INSERTION);
+BENCHMARK(UPDATION);
+BENCHMARK(LOOKUP);
+BENCHMARK(DELETION);
+// BENCHMARK(BENCHMARK_HASHTABLE);
+
+//unordered map
+BENCHMARK(INSERTION2);
+BENCHMARK(LOOKUP2);
+BENCHMARK(UPDATION2);
+BENCHMARK(DELETION2);
 
 BENCHMARK_MAIN();
 

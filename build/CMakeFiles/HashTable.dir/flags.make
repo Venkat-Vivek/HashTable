@@ -6,5 +6,5 @@ CXX_DEFINES = -DBENCHMARK_STATIC_DEFINE
 
 CXX_INCLUDES = -I/home/venkat-pt7718/sample/HashTable/benchmark/include
 
-CXX_FLAGS = -std=gnu++17
+CXX_FLAGS = -O3 -DNDEBUG -std=gnu++17
 

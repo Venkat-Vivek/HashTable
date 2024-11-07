@@ -3,6 +3,10 @@ project(HashTable)
 
 # Add Google Benchmark as a subdirectory
 add_subdirectory(benchmark)
+
+# Set the build type to Release for optimization
+set(CMAKE_BUILD_TYPE Release)
+
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
