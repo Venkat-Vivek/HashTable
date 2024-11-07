@@ -31,7 +31,7 @@ struct HashTable {
 
     public:
         HashTable() {
-            cap = 1600;
+            cap = 16;
             size = 0;
             deletedCount = 0;
             hashTable = new Node<K, V>[cap];
