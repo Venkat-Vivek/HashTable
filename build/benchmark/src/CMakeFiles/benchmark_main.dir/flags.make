@@ -6,5 +6,5 @@ CXX_DEFINES = -DBENCHMARK_STATIC_DEFINE -DHAVE_POSIX_REGEX -DHAVE_PTHREAD_AFFINI
 
 CXX_INCLUDES = -I/home/venkat-pt7718/sample/HashTable/benchmark/include -I/home/venkat-pt7718/sample/HashTable/benchmark/src
 
-CXX_FLAGS =   -Wall  -Wextra  -Wshadow  -Wfloat-equal  -Wold-style-cast  -Wconversion  -Werror  -pedantic  -pedantic-errors  -fstrict-aliasing  -Wno-deprecated-declarations  -Wno-deprecated  -Wstrict-aliasing -std=c++14 -fvisibility=hidden -fvisibility-inlines-hidden
+CXX_FLAGS =   -Wall  -Wextra  -Wshadow  -Wfloat-equal  -Wold-style-cast  -Wconversion  -Werror  -pedantic  -pedantic-errors  -fstrict-aliasing  -Wno-deprecated-declarations  -Wno-deprecated  -Wstrict-aliasing -O3 -DNDEBUG -std=c++14 -fvisibility=hidden -fvisibility-inlines-hidden
 

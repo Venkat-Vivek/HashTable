@@ -10,35 +10,35 @@ using namespace std;
 std::shared_mutex mt;
 
 template <typename K, typename V>
-struct Node {
+struct NodeBlock {
     K key;
     V value;
     bool isDeleted;
     bool isEmpty;
     uint32_t hash;
 
-     Node(const K& Key = K(), const V& Value = V(), bool deleted = false, bool empty = true, uint32_t h = 0) 
+     NodeBlock(const K& Key = K(), const V& Value = V(), bool deleted = false, bool empty = true, uint32_t h = 0) 
         : key(std::move(Key)), value(std::move(Value)), isDeleted(deleted), isEmpty(empty), hash(h) {}
 };
 
 template<typename K, typename V>
-struct HashTable {
+struct CustomHashTable {
     private: 
         int cap;
         int size;
         int deletedCount;
-        Node<K, V>* hashTable;
+        NodeBlock<K, V>* HashTable;
 
     public:
-        HashTable() {
+        CustomHashTable() {
             cap = 16;
             size = 0;
             deletedCount = 0;
-            hashTable = new Node<K, V>[cap];
+            HashTable = new NodeBlock<K, V>[cap];
         }
 
-        ~HashTable() {
-            delete[] hashTable;
+        ~CustomHashTable() {
+            delete[] HashTable;
         }
 
     private:
@@ -59,8 +59,8 @@ struct HashTable {
         int bucketIndex(const K& key) {
             uint32_t hashedValue = getHash(key);
             uint32_t ind = hashedValue % cap;
-            while (!hashTable[ind].isEmpty || hashTable[ind].isDeleted) {
-                if (hashTable[ind].hash == hashedValue && hashTable[ind].key == key) {
+            while (!HashTable[ind].isEmpty || HashTable[ind].isDeleted) {
+                if (HashTable[ind].hash == hashedValue && HashTable[ind].key == key) {
                     return ind;
                 }
                 ind++;
@@ -70,20 +70,20 @@ struct HashTable {
         }
 
         void resizeTable(int oldCap, int newCap) {
-            Node<K, V>* oldTable = hashTable;
+            NodeBlock<K, V>* oldTable = HashTable;
             size = 0;
             cap = newCap;
-            hashTable = new Node<K, V>[cap];
+            HashTable = new NodeBlock<K, V>[cap];
             deletedCount = 0;
             for (int i = 0; i < oldCap; i++) {
                 if (!oldTable[i].isEmpty && !oldTable[i].isDeleted) {
                     uint32_t hashedValue = getHash(oldTable[i].key);
                     uint32_t ind = hashedValue % cap;
                     
-                    while ((!hashTable[ind % cap].isEmpty)) {
+                    while ((!HashTable[ind % cap].isEmpty)) {
                         ind++;
                     }
-                    hashTable[ind % cap] = {std::move(oldTable[i].key), std::move(oldTable[i].value), false, false, hashedValue};
+                    HashTable[ind % cap] = {std::move(oldTable[i].key), std::move(oldTable[i].value), false, false, hashedValue};
                     
                     size++;
                 }
@@ -98,13 +98,13 @@ struct HashTable {
             uint32_t hashedValue = getHash(key);
             uint32_t ind = hashedValue % cap;
 
-            while ((!hashTable[ind % cap].isEmpty || hashTable[ind % cap].isDeleted)) {
-                if(hashTable[ind % cap].hash == hashedValue && hashTable[ind % cap].key == key){
+            while ((!HashTable[ind % cap].isEmpty || HashTable[ind % cap].isDeleted)) {
+                if(HashTable[ind % cap].hash == hashedValue && HashTable[ind % cap].key == key){
                     return; // Key already exists
                 }
                 ind++;
             }
-            hashTable[ind % cap] = {std::move(key), std::move(value), false, false, hashedValue};
+            HashTable[ind % cap] = {std::move(key), std::move(value), false, false, hashedValue};
             
             size++;
             
@@ -119,7 +119,7 @@ struct HashTable {
             std::unique_lock<std::shared_mutex> lock(mt); //  lock for update operation
             int ind = bucketIndex(key);
             if (ind != -1) {
-                hashTable[ind].value = std::move(value);
+                HashTable[ind].value = std::move(value);
                 return true;
             }
             return false;
@@ -130,7 +130,7 @@ struct HashTable {
             std:unique_lock<std::shared_mutex> lock(mt); //  lock for remove operation
             int ind = bucketIndex(key);
             if (ind != -1) {
-                hashTable[ind] = {K(), V(), true, true, 0};
+                HashTable[ind] = {K(), V(), true, true, 0};
                 deletedCount++;
                 flag = true;
             }
@@ -146,7 +146,7 @@ struct HashTable {
             std::shared_lock<std::shared_mutex> lock(mt); // lock for read operation
             int ind = bucketIndex(key);
             if (ind != -1) {
-                return hashTable[ind].value;
+                return HashTable[ind].value;
             } 
             else {
                 return V();
@@ -156,8 +156,8 @@ struct HashTable {
         void printHashTable() {
             std::unique_lock<std::shared_mutex> lock(mt); // lock for printing hash table
             for (int i = 0; i < cap; ++i) { 
-                if (!hashTable[i].isDeleted && !hashTable[i].isEmpty) {
-                    cout << "Block " << i << ": " << hashTable[i].key << " => " << hashTable[i].value << endl;
+                if (!HashTable[i].isDeleted && !HashTable[i].isEmpty) {
+                    cout << "Block " << i << ": " << HashTable[i].key << " => " << HashTable[i].value << endl;
                 }
             }
         }
@@ -174,21 +174,21 @@ struct HashTable {
 // using namespace std;
 
 // template <typename K, typename V>
-// struct Node {
+// struct NodeBlock {
 //     K key;
 //     V value;
 //     bool isDeleted;
 //     bool isEmpty;
 //     uint32_t hash;
 
-//     // Node(const K& Key = K(), const V& Value= V(), bool deleted = false, bool empty = true, uint32_t h = 0){
+//     // NodeBlock(const K& Key = K(), const V& Value= V(), bool deleted = false, bool empty = true, uint32_t h = 0){
 //     //     key = Key;
 //     //     value = Value;
 //     //     isDeleted = deleted;
 //     //     isEmpty = empty;
 //     //     hash = h;
 //     // }
-//     Node(const K& Key = K(), const V& Value = V(), bool deleted = false, bool empty = true, uint32_t h = 0) 
+//     NodeBlock(const K& Key = K(), const V& Value = V(), bool deleted = false, bool empty = true, uint32_t h = 0) 
 //         : key(std::move(Key)), value(std::move(Value)), isDeleted(deleted), isEmpty(empty), hash(h) {}
 // };
 
@@ -197,17 +197,17 @@ struct HashTable {
 //     int cap;
 //     int size;
 //     int deletedCount;
-//     Node<K, V>* hashTable;
+//     NodeBlock<K, V>* HashTable;
 
 //     HashTable() {
 //         cap = 16;
 //         size = 0;
 //         deletedCount = 0;
-//         hashTable = new Node<K, V>[cap];
+//         HashTable = new NodeBlock<K, V>[cap];
 //     }
 
 //     ~HashTable() {
-//         delete[] hashTable;
+//         delete[] HashTable;
 //     }
 
 //     uint32_t getHash(const K& key) {
@@ -228,14 +228,14 @@ struct HashTable {
 //         uint32_t hashedValue = getHash(key);
 //         uint32_t ind = hashedValue % cap;
 
-//         while ((!hashTable[ind % cap].isEmpty || hashTable[ind % cap].isDeleted)) {
-//             if(hashTable[ind % cap].hash == hashedValue && hashTable[ind % cap].key == key){
+//         while ((!HashTable[ind % cap].isEmpty || HashTable[ind % cap].isDeleted)) {
+//             if(HashTable[ind % cap].hash == hashedValue && HashTable[ind % cap].key == key){
 //                 return;
 //             }
 //             ind++;
 //         }
 
-//         hashTable[ind % cap] = {std::move(key), std::move(value) , false, false, hashedValue};
+//         HashTable[ind % cap] = {std::move(key), std::move(value) , false, false, hashedValue};
 //         size++;
    
 //         if (size >= (int)(0.7 * cap)) {
@@ -246,8 +246,8 @@ struct HashTable {
 //     int bucketIndex(const K& key){
 //         uint32_t hashedValue = getHash(key);
 //         uint32_t ind = hashedValue % cap;
-//         while(!hashTable[ind].isEmpty || hashTable[ind].isDeleted){
-//             if (hashTable[ind].hash == hashedValue && hashTable[ind].key == key) {
+//         while(!HashTable[ind].isEmpty || HashTable[ind].isDeleted){
+//             if (HashTable[ind].hash == hashedValue && HashTable[ind].key == key) {
 //                 return ind;
 //             }
 //             ind++;
@@ -259,7 +259,7 @@ struct HashTable {
 //     bool update(const K& key, V value) {
 //         int ind = bucketIndex(key);
 //         if(ind != -1){
-//             hashTable[ind].value = std::move(value);
+//             HashTable[ind].value = std::move(value);
 //             return true;
 //         }
 //         else{
@@ -270,7 +270,7 @@ struct HashTable {
 //     bool remove(const K& key) {
 //         int ind = bucketIndex(key);
 //         if(ind != -1){
-//             hashTable[ind] = {K(), V(), true, true, 0};
+//             HashTable[ind] = {K(), V(), true, true, 0};
 //             deletedCount++;
 //             if ((size - deletedCount) < (cap / 4) && (cap / 2 >= 16 )) {
 //                 resizeTable(cap, cap / 2);
@@ -285,7 +285,7 @@ struct HashTable {
 //     V get(const K& key) {
 //         int ind = bucketIndex(key);
 //         if(ind != -1){
-//             V ans = hashTable[ind].value;
+//             V ans = HashTable[ind].value;
 //             return ans;
 //         }
 //         else{
@@ -295,10 +295,10 @@ struct HashTable {
 //     }
 
 //     void resizeTable(int oldCap, int newCap) {
-//         Node<K, V>* oldTable = hashTable;
+//         NodeBlock<K, V>* oldTable = HashTable;
 //         size = 0;
 //         cap = newCap;
-//         Node<K, V>*  nhashTable = new Node<K, V>[cap];
+//         NodeBlock<K, V>*  nHashTable = new NodeBlock<K, V>[cap];
 //         deletedCount = 0;
 //         cout<< oldCap<< endl;
 //         for (int i = 0; i < oldCap; i++) {
@@ -306,14 +306,14 @@ struct HashTable {
 //                 insert(oldTable[i].key, oldTable[i].value);
 //             }
 //         }
-//         hashTable = nhashTable;
+//         HashTable = nHashTable;
 //         delete[] oldTable;
 //     }
 
 //     void printHashTable() {
 //         for (int i = 0; i < cap; ++i) {
-//             if(!hashTable[i].isDeleted && !hashTable[i].isEmpty){
-//                 cout << "Block " << i << ": " << hashTable[i].key << " => " << hashTable[i].value << endl;
+//             if(!HashTable[i].isDeleted && !HashTable[i].isEmpty){
+//                 cout << "Block " << i << ": " << HashTable[i].key << " => " << HashTable[i].value << endl;
 //             }
 //         }
 //         cout << endl;
@@ -327,10 +327,10 @@ struct HashTable {
     //     uint32_t hashedValue = getHash(key);
     //     uint32_t ind = hashedValue % cap;
         
-    //     while ((!hashTable[ind % cap].isEmpty)) {
+    //     while ((!HashTable[ind % cap].isEmpty)) {
     //         ind++;
     //     }
-    //     hashTable[ind % cap] = {std::move(key), std::move(value), false, false, hashedValue};
+    //     HashTable[ind % cap] = {std::move(key), std::move(value), false, false, hashedValue};
         
     //     size++;
     // }

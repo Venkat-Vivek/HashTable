@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(HashTable)
 
+# Set the build type to Release for optimization
+set(CMAKE_BUILD_TYPE Release)
+
 # Add Google Benchmark as a subdirectory
 add_subdirectory(benchmark)
 
@@ -15,7 +18,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(benchmark REQUIRED)
 
 # Set the sources with the correct path
-set(SOURCES ../src/benchmark.cpp ../src/murmurHash.cpp)
+set(SOURCES ../src/bench.cpp ../src/murmurHash.cpp)
 
 # Define the executable
 add_executable(HashTable ${SOURCES})

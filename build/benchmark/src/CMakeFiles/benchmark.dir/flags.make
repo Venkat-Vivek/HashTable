@@ -6,7 +6,7 @@ CXX_DEFINES = -DBENCHMARK_HAS_PTHREAD_AFFINITY -DBENCHMARK_STATIC_DEFINE -DHAVE_
 
 CXX_INCLUDES = -I/home/venkat-pt7718/sample/HashTable/benchmark/include -I/home/venkat-pt7718/sample/HashTable/benchmark/src
 
-CXX_FLAGS =   -Wall  -Wextra  -Wshadow  -Wfloat-equal  -Wold-style-cast  -Wconversion  -Werror  -pedantic  -pedantic-errors  -fstrict-aliasing  -Wno-deprecated-declarations  -Wno-deprecated  -Wstrict-aliasing -std=c++14 -fvisibility=hidden -fvisibility-inlines-hidden
+CXX_FLAGS =   -Wall  -Wextra  -Wshadow  -Wfloat-equal  -Wold-style-cast  -Wconversion  -Werror  -pedantic  -pedantic-errors  -fstrict-aliasing  -Wno-deprecated-declarations  -Wno-deprecated  -Wstrict-aliasing -O3 -DNDEBUG -std=c++14 -fvisibility=hidden -fvisibility-inlines-hidden
 
 # Custom defines: benchmark/src/CMakeFiles/benchmark.dir/benchmark.cc.o_DEFINES = BENCHMARK_VERSION="v1.9.0-18-gd99cdd73"
 

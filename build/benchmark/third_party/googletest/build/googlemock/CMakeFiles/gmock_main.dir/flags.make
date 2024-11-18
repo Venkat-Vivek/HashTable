@@ -6,5 +6,5 @@ CXX_DEFINES = -DHAVE_POSIX_REGEX -DHAVE_PTHREAD_AFFINITY -DHAVE_STD_REGEX -DHAVE
 
 CXX_INCLUDES = -isystem /home/venkat-pt7718/sample/HashTable/benchmark/include -isystem /home/venkat-pt7718/sample/HashTable/benchmark/googletest/googlemock/include -isystem /home/venkat-pt7718/sample/HashTable/benchmark/googletest/googlemock -isystem /home/venkat-pt7718/sample/HashTable/benchmark/googletest/googletest/include -isystem /home/venkat-pt7718/sample/HashTable/benchmark/googletest/googletest
 
-CXX_FLAGS =   -Wall  -Wextra  -Wshadow  -Wfloat-equal  -Wold-style-cast  -Wconversion  -Werror  -pedantic  -pedantic-errors  -fstrict-aliasing  -Wno-deprecated-declarations  -Wno-deprecated  -Wstrict-aliasing -std=c++14 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -w
+CXX_FLAGS =   -Wall  -Wextra  -Wshadow  -Wfloat-equal  -Wold-style-cast  -Wconversion  -Werror  -pedantic  -pedantic-errors  -fstrict-aliasing  -Wno-deprecated-declarations  -Wno-deprecated  -Wstrict-aliasing -O3 -DNDEBUG -std=c++14 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -w
 

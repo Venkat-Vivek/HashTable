@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/HashTable.dir/src/benchmark.cpp.o"
-  "CMakeFiles/HashTable.dir/src/benchmark.cpp.o.d"
+  "CMakeFiles/HashTable.dir/src/bench.cpp.o"
+  "CMakeFiles/HashTable.dir/src/bench.cpp.o.d"
   "CMakeFiles/HashTable.dir/src/murmurHash.cpp.o"
   "CMakeFiles/HashTable.dir/src/murmurHash.cpp.o.d"
   "HashTable"

@@ -811,29 +811,29 @@ profiler_manager_gtest/fast:
 	$(MAKE) $(MAKESILENT) -f benchmark/test/CMakeFiles/profiler_manager_gtest.dir/build.make benchmark/test/CMakeFiles/profiler_manager_gtest.dir/build
 .PHONY : profiler_manager_gtest/fast
 
-src/benchmark.o: src/benchmark.cpp.o
-.PHONY : src/benchmark.o
+src/bench.o: src/bench.cpp.o
+.PHONY : src/bench.o
 
 # target to build an object file
-src/benchmark.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/HashTable.dir/build.make CMakeFiles/HashTable.dir/src/benchmark.cpp.o
-.PHONY : src/benchmark.cpp.o
+src/bench.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/HashTable.dir/build.make CMakeFiles/HashTable.dir/src/bench.cpp.o
+.PHONY : src/bench.cpp.o
 
-src/benchmark.i: src/benchmark.cpp.i
-.PHONY : src/benchmark.i
+src/bench.i: src/bench.cpp.i
+.PHONY : src/bench.i
 
 # target to preprocess a source file
-src/benchmark.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/HashTable.dir/build.make CMakeFiles/HashTable.dir/src/benchmark.cpp.i
-.PHONY : src/benchmark.cpp.i
+src/bench.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/HashTable.dir/build.make CMakeFiles/HashTable.dir/src/bench.cpp.i
+.PHONY : src/bench.cpp.i
 
-src/benchmark.s: src/benchmark.cpp.s
-.PHONY : src/benchmark.s
+src/bench.s: src/bench.cpp.s
+.PHONY : src/bench.s
 
 # target to generate assembly for a file
-src/benchmark.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/HashTable.dir/build.make CMakeFiles/HashTable.dir/src/benchmark.cpp.s
-.PHONY : src/benchmark.cpp.s
+src/bench.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/HashTable.dir/build.make CMakeFiles/HashTable.dir/src/bench.cpp.s
+.PHONY : src/bench.cpp.s
 
 src/murmurHash.o: src/murmurHash.cpp.o
 .PHONY : src/murmurHash.o
@@ -921,9 +921,9 @@ help:
 	@echo "... user_counters_tabular_test"
 	@echo "... user_counters_test"
 	@echo "... user_counters_thousands_test"
-	@echo "... src/benchmark.o"
-	@echo "... src/benchmark.i"
-	@echo "... src/benchmark.s"
+	@echo "... src/bench.o"
+	@echo "... src/bench.i"
+	@echo "... src/bench.s"
 	@echo "... src/murmurHash.o"
 	@echo "... src/murmurHash.i"
 	@echo "... src/murmurHash.s"
