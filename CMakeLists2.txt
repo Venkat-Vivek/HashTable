@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 3.10)
+project(HashTable)
+
+# Set the build type to Release for optimization
+set(CMAKE_BUILD_TYPE Release)
+
+# Specify the C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Find Google Benchmark 
+find_package(benchmark REQUIRED)
+
+# Specify source files with the correct paths
+set(SOURCES ../src/bench.cpp ../src/murmurHash.cpp)
+
+# Define the executable
+add_executable(HashTable ${SOURCES})
+
+# Link the executable with Google Benchmark, pthread, and TBB libraries
+target_link_libraries(HashTable PRIVATE benchmark::benchmark pthread)
+
+# Include directories (optional, helps if headers are in different directories)
+target_include_directories(HashTable PRIVATE ../src)
